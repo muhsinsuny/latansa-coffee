@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -13,17 +14,24 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const res = await axios.post('https://wpu-cafe.vercel.app/api/auth/login', {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        'https://wpu-cafe.vercel.app/api/auth/login',
+        {
+          email,
+          password,
+        }
+      );
       if (res.data && res.data.token) {
         localStorage.setItem('token', res.data.token);
         navigate('/admin/dashboard');
       }
-    } catch (err) {
-      console.error('Login error:', err.response?data || err.message);
-      setError('Login gagal. Pastikan username dan password benar.');
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        console.error('Login error:', err.response?.data || err.message);
+        setError('Login gagal. Pastikan username dan password benar.');
+      } else {
+        console.error('Unknown error', err);
+      }
     }
   };
 

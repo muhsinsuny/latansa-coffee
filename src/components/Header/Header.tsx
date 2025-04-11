@@ -11,7 +11,7 @@ export default function Header() {
     <header className='bg-white shadow p-4'>
       <div className='max-w-5xl mx-auto flex justify-between items-center'>
         <Link to='/' className='text-xl font-bold text-amber-700'>
-          LaTansa Coffee
+          La-Tansa Coffee
         </Link>
         <nav className='flex gap-4'>
           <Link

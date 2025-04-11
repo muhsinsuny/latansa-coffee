@@ -9,6 +9,8 @@ export default function Checkout() {
   const cart = useSelector((state: RootState) => state.cart.items);
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [name, setName] = useState('');
+  const [tableNumber, setTableNumber] = useState('');
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,12 +21,30 @@ export default function Checkout() {
 
     setLoading(true);
 
+    const total = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
     try {
-      await axios.post('https://wpu-cafe.vercel.app/api/orders', {
-        name,
-        items: cart.map((item) => `${item.name} x${item.quantity}`).join(', '),
-        total,
-      });
+      await axios.post(
+        'https://wpu-cafe.vercel.app/api/orders',
+        {
+          customerName: name,
+          tableNumber: tableNumber,
+          cart: cart.map((item) => ({
+            menuItemId: item.id,
+            quantity: item.quantity,
+            notes: item.notes,
+          })),
+          total,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
       dispatch(clearCart());
       navigate('/');
       alert('Pesanan berhasil dikirim!');
@@ -49,6 +69,22 @@ export default function Checkout() {
             onChange={(e) => setName(e.target.value)}
             required
           />
+          <label className='block text-sm mb-1'>Nomor Meja</label>
+          <input
+            type='text'
+            className='w-full border rounded p-2'
+            value={tableNumber}
+            onChange={(e) => setTableNumber(e.target.value)}
+            required
+          />
+          <label className='block text-sm mb-1'>Catatan</label>
+          <input
+            type='text'
+            className='w-full border rounded p-2'
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            required
+          />
         </div>
 
         <div>
@@ -63,7 +99,7 @@ export default function Checkout() {
         </div>
 
         <div className='font-bold text-lg'>
-          Total: Rp {total.toLocaleString()}
+          Total: $ {total.toLocaleString()}
         </div>
 
         <button

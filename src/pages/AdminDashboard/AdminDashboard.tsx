@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 interface Order {
-  id: number;
-  name: string;
-  items: string;
+  id: string;
+  customer_name: string;
+  table_number: number;
   total: number;
   status: string;
-  createdAt: string;
+  created_at: string;
 }
 
 export default function AdminDashboard() {
@@ -24,8 +24,11 @@ export default function AdminDashboard() {
             Authorization: `Bearer ${token}`,
           },
         });
-        setOrders(res.data);
-        const revenue = res.data.reduce(
+        const orders = Array.isArray(res.data.data) ? res.data.data : [];
+
+        setOrders(orders);
+        console.log('orders dari API', orders);
+        const revenue = orders.reduce(
           (sum: number, order: Order) => sum + order.total,
           0
         );
@@ -40,6 +43,34 @@ export default function AdminDashboard() {
     fetchOrders();
   }, []);
 
+  const handleUpdatesStatus = async (id: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Anda harus login terlebih dahulu.');
+      return;
+    }
+    try {
+      await axios.put(
+        `https://wpu-cafe.vercel.app/api/orders/${id}`,
+        { status: 'COMPLETED' },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === id ? { ...order, status: 'COMPLETED' } : order
+        )
+      );
+    } catch (error) {
+      console.error('Gagal memperbarui status order:', error);
+      alert('Gagal memperbarui status order. Silakan coba lagi.');
+    }
+  };
+
   return (
     <div className='max-w-4xl mx-auto px-4 py-6'>
       <h1 className='text-2xl font-bold mb-4'>Dashboard Admin</h1>
@@ -52,7 +83,7 @@ export default function AdminDashboard() {
               Total Pendapatan Hari Ini:
             </h2>
             <p className='text-2xl text-green-600 font-bold'>
-              Rp {totalRevenue.toLocaleString()}
+              $ {totalRevenue.toLocaleString()}
             </p>
           </div>
 
@@ -61,7 +92,7 @@ export default function AdminDashboard() {
               <thead className='bg-amber-100 text-amber-800'>
                 <tr>
                   <th className='px-4 py-2'>Nama</th>
-                  <th className='px-4 py-2'>Pesanan</th>
+                  <th className='px-4 py-2'>Nomor Meja</th>
                   <th className='px-4 py-2'>Total</th>
                   <th className='px-4 py-2'>Status</th>
                   <th className='px-4 py-2'>Waktu</th>
@@ -70,16 +101,26 @@ export default function AdminDashboard() {
               <tbody>
                 {orders.map((order) => (
                   <tr key={order.id} className='border-b'>
-                    <td className='px-4 py-2'>{order.name}</td>
+                    <td className='px-4 py-2'>{order.customer_name}</td>
                     <td className='px-4 py-2 whitespace-nowrap'>
-                      {order.items}
+                      {order.table_number}
                     </td>
                     <td className='px-4 py-2'>
-                      Rp {order.total.toLocaleString()}
+                      $ {order.total.toLocaleString()}
                     </td>
-                    <td className='px-4 py-2 capitalize'>{order.status}</td>
+                    <td className='px-4 py-2 capitalize'>
+                      {order.status === 'PROCESSING' && (
+                        <button
+                          className='bg-green-500 text-white px-3 py-1 mt-2 rounded hover:bg-green-600'
+                          onClick={() => handleUpdatesStatus(order.id)}
+                        >
+                          Tandai selesai
+                        </button>
+                      )}
+                      {order.status}
+                    </td>
                     <td className='px-4 py-2'>
-                      {new Date(order.createdAt).toLocaleTimeString()}
+                      {new Date(order.created_at).toLocaleTimeString()}
                     </td>
                   </tr>
                 ))}
