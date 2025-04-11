@@ -22,7 +22,7 @@ export default function AdminLogin() {
         navigate('/admin/dashboard');
       }
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Login error:', err.response?data || err.message);
       setError('Login gagal. Pastikan username dan password benar.');
     }
   };
