@@ -1,10 +1,21 @@
-import Home from './pages/Home/home';
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/Home/Home';
+import Cart from './pages/Cart/Cart';
+import AdminLogin from './pages/AdminLogin/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
+import Header from './components/Header/Header';
 
 function App() {
   return (
-    <>
-      <Home />
-    </>
+    <div className='min-h-screen bg-gray-50'>
+      <Header />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/cart' element={<Cart />} />
+        <Route path='/admin/login' element={<AdminLogin />} />
+        <Route path='/admin/dashboard' element={<AdminDashboard />} />
+      </Routes>
+    </div>
   );
 }
 
