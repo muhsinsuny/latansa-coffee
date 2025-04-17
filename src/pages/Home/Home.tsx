@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/cartSlice';
+import { addToCart, CartItem } from '../../redux/cartSlice';
 
-type Coffee = {
-  id: number;
-  name: string;
-  price: number;
-  image_url: string;
-};
+// type Coffee = {
+//   id: number;
+//   name: string;
+//   price: number;
+//   image_url: string;
+// };
 
 export default function Home() {
-  const [menu, setMenu] = useState<Coffee[]>([]);
+  const [menu, setMenu] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -30,8 +30,14 @@ export default function Home() {
     fetchMenu();
   }, []);
 
-  const handleAddToCart = (coffee: Coffee) => {
-    const cartItem = { ...coffee, quantity: 1, tableNumber: 0, notes: '' };
+  const handleAddToCart = (coffee: CartItem) => {
+    const cartItem = {
+      ...coffee,
+      id: coffee.id.toString(),
+      quantity: 1,
+      tableNumber: 0,
+      notes: '',
+    };
     dispatch(addToCart(cartItem));
   };
 
@@ -45,7 +51,7 @@ export default function Home() {
           {menu?.map((coffee) => (
             <div
               key={coffee.id}
-              className='bg-white p-4 rounded-xl shadow hover:shadow-lg transition'
+              className='bg-white p-4 rounded-xl shadow hover:shadow-lg transition overflow-hidden hover:scale-105'
             >
               <img
                 src={coffee.image_url}

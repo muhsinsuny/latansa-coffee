@@ -50,7 +50,7 @@ export default function Checkout() {
       alert('Pesanan berhasil dikirim!');
     } catch (error) {
       console.error('Gagal melakukan checkout:', error);
-      alert('Checkout gagal. Silakan coba lagi.');
+      alert('Checkout gagal. Anda harus login dulu. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ export default function Checkout() {
         <button
           type='submit'
           disabled={loading}
-          className='w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700'
+          className='w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 cursor-pointer'
         >
           {loading ? 'Memproses...' : 'Kirim Pesanan'}
         </button>

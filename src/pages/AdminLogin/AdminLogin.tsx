@@ -62,7 +62,8 @@ export default function AdminLogin() {
         </div>
         <button
           type='submit'
-          className='w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700'
+          className='w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 cursor-pointer'
+          disabled={!email || !password}
         >
           Login
         </button>
