@@ -86,14 +86,14 @@ export default function Cart() {
                   <div className='flex items-between gap-2 mt-2'>
                     <button
                       onClick={() => handleDecrement(item.id)}
-                      className='w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600'
+                      className='w-8 h-8 flex items-center justify-center cursor-pointer rounded-full bg-red-500 text-white hover:bg-red-600'
                     >
                       -
                     </button>
                     <span className='px-2'>{item.quantity}</span>
                     <button
                       onClick={() => handleIncrement(item.id)}
-                      className='w-8 h-8 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600'
+                      className='w-8 h-8 flex items-center justify-center cursor-pointer rounded-full bg-green-500 text-white hover:bg-green-600'
                     >
                       +
                     </button>

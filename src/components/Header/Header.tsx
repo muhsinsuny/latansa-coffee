@@ -1,8 +1,27 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const Navigate = useNavigate();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const role = useSelector((state: RootState) => state.auth.user?.role);
+
+  const handleLoginClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    if (!isLoggedIn && role !== 'admin') {
+      Navigate('/admin/login');
+    } else if (role === 'admin') {
+      Navigate('/admin/dashboard');
+    }
+
+    console.log('LoggedIn', isLoggedIn);
+    console.log('Role', role);
+  };
+
   const cartCount = useSelector((state: RootState) =>
     state.cart.items.reduce((total, item) => total + item.quantity, 0)
   );
@@ -32,7 +51,12 @@ export default function Header() {
             )}
           </Link>
           <Link
-            to='/admin/login'
+            to={
+              !isLoggedIn && role !== 'admin'
+                ? '/admin/login'
+                : '/admin/dashboard'
+            }
+            onClick={handleLoginClick}
             className='text-gray-700 hover:text-amber-700 transition'
           >
             Admin

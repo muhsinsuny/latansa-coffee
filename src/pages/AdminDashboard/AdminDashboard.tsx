@@ -111,7 +111,7 @@ export default function AdminDashboard() {
                     <td className='px-4 py-2 capitalize'>
                       {order.status === 'PROCESSING' && (
                         <button
-                          className='bg-green-500 text-white px-3 py-1 mt-2 rounded hover:bg-green-600'
+                          className='bg-green-500 text-white px-3 py-1 mt-2 cursor-pointer rounded hover:bg-green-600'
                           onClick={() => handleUpdatesStatus(order.id)}
                         >
                           Tandai selesai

@@ -46,7 +46,7 @@ export default function Checkout() {
         }
       );
       dispatch(clearCart());
-      navigate('/');
+      navigate('/admin/dashboard');
       alert('Pesanan berhasil dikirim!');
     } catch (error) {
       console.error('Gagal melakukan checkout:', error);
